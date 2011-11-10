@@ -42,79 +42,79 @@ from statusmsg import StatusMsg
 
 
 class path_status(StatusMsg):
-	def format(self, kwmsg):
-		msg = "(%d): " % kwmsg["count"]
-		dot = "..."
-		sep = os.sep
-		t = kwmsg["msg"]
-		
-		if self.label_width() > -1:
-			label_len = self.label_width()
-		else:
-			label_len = 0
-		max_width = self.max_width
-		msg_len = label_len + len(msg)
-		tmp_len = msg_len + len(t)
-		dot_len = len(dot)
-		sep_len = len(sep)
-		
-		if tmp_len > max_width:
-			head, tail = os.path.split(t)
-			y = max_width - msg_len - (dot_len + sep_len) - len(tail)
-			if y > 0:
-				path_short = head[:y] + dot + sep + tail
-			else:
-				path_short = t[:max_width - msg_len]
-		elif tmp_len < max_width:
-			path_short = t
-		else:
-			path_short = ""
-		
-		return "%s%s" % (msg, path_short)
-		
-	def set_max_width(self, width):
-		if width < 1:
-			self.max_width = 79
-		else:
-			self.max_width = width
-		
+    def format(self, kwmsg):
+        msg = "(%d): " % kwmsg["count"]
+        dot = "..."
+        sep = os.sep
+        t = kwmsg["msg"]
+        
+        if self.label_width() > -1:
+            label_len = self.label_width()
+        else:
+            label_len = 0
+        max_width = self.max_width
+        msg_len = label_len + len(msg)
+        tmp_len = msg_len + len(t)
+        dot_len = len(dot)
+        sep_len = len(sep)
+        
+        if tmp_len > max_width:
+            head, tail = os.path.split(t)
+            y = max_width - msg_len - (dot_len + sep_len) - len(tail)
+            if y > 0:
+                path_short = head[:y] + dot + sep + tail
+            else:
+                path_short = t[:max_width - msg_len]
+        elif tmp_len < max_width:
+            path_short = t
+        else:
+            path_short = ""
+        
+        return "%s%s" % (msg, path_short)
+        
+    def set_max_width(self, width):
+        if width < 1:
+            self.max_width = 79
+        else:
+            self.max_width = width
+        
 ###########################################################################
 
 def _fake_path_generator(width, max_paths):
-	if width < 1:
-		width = 79
-	if max_paths < 1:
-		max_paths = 1000
-	
-	for x in range(0, max_paths):
-		s = "path" * width
-		yield "%s%s%s%d.xyz" % (os.sep, s, os.sep, x)
+    if width < 1:
+        width = 79
+    if max_paths < 1:
+        max_paths = 1000
+    
+    for x in range(0, max_paths):
+        s = "path" * width
+        yield "%s%s%s%d.xyz" % (os.sep, s, os.sep, x)
 
 ###########################################################################
 
 def main():
-	pstatus = path_status(sys.stdout)
-	pstatus.set_max_width(79)
-	kwmsg = {"msg": "", "count": 0}
-	
-	pstatus.label("Paths over 79 characters ")
-	for f in _fake_path_generator(width=100, max_paths=6000):
-		kwmsg["msg"] = f
-		kwmsg["count"] = kwmsg["count"] + 1
-		pstatus.write(kwmsg)
-		pstatus.flush()
-	pstatus.label("Paths over 79 characters: Completed\n")
-	
-	pstatus.label("Paths under 79 characters ")
-	kwmsg["count"] = 0
-	for f in _fake_path_generator(width=1, max_paths=6000):
-		kwmsg["msg"] = f
-		kwmsg["count"] = kwmsg["count"] + 1
-		pstatus.write(kwmsg)
-		pstatus.flush()
-	pstatus.label("Paths under 79 characters: Completed\n")
-	
+    pstatus = path_status(sys.stdout)
+    pstatus.set_max_width(79)
+    kwmsg = {"msg": "", "count": 0}
+    
+    pstatus.label("Paths over 79 characters ")
+    for f in _fake_path_generator(width=100, max_paths=6000):
+        kwmsg["msg"] = f
+        kwmsg["count"] = kwmsg["count"] + 1
+        pstatus.write(kwmsg)
+        pstatus.flush()
+    pstatus.label("Paths over 79 characters: Completed\n")
+    
+    pstatus.label("Paths under 79 characters ")
+    kwmsg["count"] = 0
+    for f in _fake_path_generator(width=1, max_paths=6000):
+        kwmsg["msg"] = f
+        kwmsg["count"] = kwmsg["count"] + 1
+        pstatus.write(kwmsg)
+        pstatus.flush()
+    pstatus.label("Paths under 79 characters: Completed\n")
+    
 ###########################################################################
 
 if __name__ == "__main__":
-	main()
+    main()
